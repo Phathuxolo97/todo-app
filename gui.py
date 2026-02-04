@@ -7,6 +7,14 @@ from modules import functions
 # Window is type and its instance ("My To-DO App")
 # Read - Method display the window on the screen.
 
+# read() - is a method that return value when click on add button
+# values = window.read() - ("Add" , { 0 , "test1"}) = Tuple
+# On textbox add key = todo -> ("Add" , { todo , "test1"}) = Tuple
+# event , values = window.read() - event = Add ->label , values = { todo , "test1"} -> dictionary
+
+# While loop keeps the window running as will always true
+# new_todo = values["todo"] -> value of the key
+
 # When click on the button after insert text : "Add" {todo:Test1} -> event , values (key & value)
 # When click on the item in the Listbox : {'todo': '', 'todos_key': ['Test3\n']} so event , (key & values)
 
@@ -29,9 +37,11 @@ list_box = sg.Listbox(values=functions.get_todos() , key="todos_key",
 
 button1 = sg.Button("Add")
 button2 = sg.Button("Edit")
+button3 = sg.Button("Delete")
+button4 = sg.Button("Exit")
 
 window = sg.Window("My Todo App" ,
-                   layout=[[label1 , input_text , button1] , [list_box , button2]] ,
+                   layout=[[label1 , input_text , button1] , [list_box , button2 , button3], [button4]] ,
                    font=("Helvetica", 10))
 
 while True:   # Make the window not to close
@@ -55,9 +65,21 @@ while True:   # Make the window not to close
           todos[index] = new_todo # That index value replace with new value
           functions.write_todos(todos)
           window["todos_key"].update(values=todos) #Refresh the screen in real time
+        case "Delete":
+
+          todo_delete = values["todos_key"][0]
+          todos = functions.get_todos()
+          todos.remove(todo_delete)
+          functions.write_todos(todos)
+          window["todos_key"].update(values=todos)
+          window["todo"].update(value=" ")# still on the delete on input box so use this statement
         case "todos_key":  # Event todo_key
           window["todo"].update(value=values["todos_key"][0]) # We want to show what is selected in list to textbox
           # update has argument value set the current value on selected list
+        case "Exit":
+          break
         case sg.WIN_CLOSED:
-            break
+          # exit() - Stop the program complete
+            break # - Stop the loop then prints (Bye)
+# print(Bye)
 window.close()
